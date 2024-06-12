@@ -1,0 +1,224 @@
+{
+    "version": "0.1.0",
+    "name": "simple_blog",
+    "instructions": [
+        {
+            "name": "initializeBlog",
+            "accounts": [
+                {
+                    "name": "blogAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "user",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": []
+        },
+        {
+            "name": "createPost",
+            "accounts": [
+                {
+                    "name": "blogAccount",
+                    "isMut": true,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "title",
+                    "type": "string"
+                },
+                {
+                    "name": "content",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "createComment",
+            "accounts": [
+                {
+                    "name": "blogAccount",
+                    "isMut": true,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "postIndex",
+                    "type": "u32"
+                },
+                {
+                    "name": "content",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "editPost",
+            "accounts": [
+                {
+                    "name": "blogAccount",
+                    "isMut": true,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "postIndex",
+                    "type": "u32"
+                },
+                {
+                    "name": "newTitle",
+                    "type": "string"
+                },
+                {
+                    "name": "newContent",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "deletePost",
+            "accounts": [
+                {
+                    "name": "blogAccount",
+                    "isMut": true,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "postIndex",
+                    "type": "u32"
+                }
+            ]
+        },
+        {
+            "name": "deleteComment",
+            "accounts": [
+                {
+                    "name": "blogAccount",
+                    "isMut": true,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "postIndex",
+                    "type": "u32"
+                },
+                {
+                    "name": "commentIndex",
+                    "type": "u32"
+                }
+            ]
+        },
+        {
+            "name": "getPost",
+            "accounts": [
+                {
+                    "name": "blogAccount",
+                    "isMut": true,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "postIndex",
+                    "type": "u32"
+                }
+            ],
+            "returns": {
+                "defined": "Post"
+            }
+        }
+    ],
+    "accounts": [
+        {
+            "name": "Blog",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "posts",
+                        "type": {
+                            "vec": {
+                                "defined": "Post"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "types": [
+        {
+            "name": "Post",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "title",
+                        "type": "string"
+                    },
+                    {
+                        "name": "content",
+                        "type": "string"
+                    },
+                    {
+                        "name": "comments",
+                        "type": {
+                            "vec": {
+                                "defined": "Comment"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Comment",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "content",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ],
+    "errors": [
+        {
+            "code": 6000,
+            "name": "EmptyTitle",
+            "msg": "Title cannot be empty"
+        },
+        {
+            "code": 6001,
+            "name": "EmptyComment",
+            "msg": "Comment content cannot be empty"
+        },
+        {
+            "code": 6002,
+            "name": "InvalidpostIndex",
+            "msg": "Invalid post index"
+        },
+        {
+            "code": 6003,
+            "name": "InvalidCommentIndex",
+            "msg": "Invalid comment index"
+        }
+    ]
+}
