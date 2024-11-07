@@ -1,7 +1,12 @@
-.App {
+/* Global styles */
+body, .App {
+  background-color: #f0f0f0; /* Light background */
+  color: #333; /* Dark text for readability */
   text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern, readable font */
 }
 
+/* Logo */
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -13,26 +18,118 @@
   }
 }
 
+/* Header */
 .App-header {
-  background-color: #282c34;
+  background-color: #e0e0e0; /* Light shade for the header */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  border-bottom: 5px solid #61dafb; /* Accent color border */
 }
 
-.App-link {
-  color: #61dafb;
+/* Links */
+.App-link, .comment-section a {
+  color: #007BFF; /* Bright blue for high contrast and visibility */
+  text-decoration: none; /* Removes underline from links for a cleaner look */
 }
 
+/* General container for centered content */
+.container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #ffffff;  /* White background for contained elements */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  border-radius: 10px; /* Rounded corners for a modern look */
+}
+
+/* Forms */
+form {
+  max-width: 100%;
+  margin: 20px auto;
+  background-color: #f7f7f7; /* Light shade for forms */
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+/* Blog posts and comment sections */
+.blog-post, .comment-section, .blog-post-title, .blog-post-content {
+  background-color: #ffffff; /* White background */
+  color: #333; /* Dark text */
+  padding: 20px;
+  margin-bottom: 30px;
+  border-radius: 8px; /* Rounded corners for blog posts and comments */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+}
+
+.comment-section {
+  margin-left: 20px;
+}
+
+/* Material UI overrides */
+.MuiTextField-root {
+  background-color: #ffffff; /* White background for input fields */
+  border-radius: 4px;
+  border: 1px solid #ccc; /* Subtle border for depth */
+  color: #333; /* Dark text */
+}
+
+.MuiButton-root {
+  margin: 10px 0;
+  background-color: #007BFF; /* Bright blue for buttons */
+  color: #FFFFFF; /* White text for buttons */
+  padding: 10px 20px;
+  border-radius: 20px; /* Pill-shaped buttons for modern look */
+  border: none;
+  transition: background-color 0.2s; /* Smooth background color transition */
+}
+
+.MuiButton-root:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Animations */
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* Additional styles to enhance readability and aesthetics */
+h1, h2, h3, h4, h5, h6 {
+  color: #333; /* Dark color for headings */
+  margin-bottom: 15px;
+}
+
+p {
+  color: #666;
+  line-height: 1.6; /* Increases readability */
+}
+
+input, textarea {
+  background-color: #ffffff;
+  color: #333;
+  border: 1px solid #ccc; /* Adds a subtle border */
+  padding: 10px;
+  margin-bottom: 10px; /* Space between input fields */
+}
+
+button {
+  cursor: pointer;
+  outline: none; /* Removes the default focus outline for a clean design */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container, form {
+    margin: 10px;
+    padding: 15px;
   }
 }

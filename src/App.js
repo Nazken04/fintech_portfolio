@@ -4,11 +4,11 @@ import { getProvider, connection } from './utils/connection';
 import BlogPost from './components/BlogPost';
 import BlogForm from './components/BlogForm';
 import Comment from './components/Comment';
-import idl from './idl.json'; 
+import idl from './idl.json';
 import './App.css';
 
-import Button from '@mui/material/Button'; 
-import TextField from '@mui/material/TextField'; 
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -19,9 +19,9 @@ const encodeBuffer = (str) => Uint8Array.from([...str].map(char => char.charCode
 
 
 function App() {
-  const [wallet, setWallet] = useState(null); 
+  const [wallet, setWallet] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [blogAccount, setBlogAccount] = useState(null); 
+  const [blogAccount, setBlogAccount] = useState(null);
 
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingPostIndex, setEditingPostIndex] = useState(null);
@@ -29,6 +29,8 @@ function App() {
   const [editContent, setEditContent] = useState('');
 
   const programID = new web3.PublicKey('3FXq22R9cSKnDhc9S2JTr2QHz8aAUQqjUJia4EFaj75Y');
+
+  const [searchTerm, setSearchTerm] = useState('');
 
 
   const connectWallet = async () => {
@@ -63,9 +65,9 @@ function App() {
       setBlogAccount(blogPda);
 
       // Check if the account exists *before* trying to fetch it 
-      const blogAccountInfo = await connection.getAccountInfo(blogPda); 
+      const blogAccountInfo = await connection.getAccountInfo(blogPda);
 
-      if (blogAccountInfo) { 
+      if (blogAccountInfo) {
         // Account exists - fetch the data
         const account = await program.account.blog.fetch(blogPda);
         setPosts(account.posts);
@@ -77,8 +79,8 @@ function App() {
             await program.methods.initializeBlog()
               .accounts({
                 blogAccount: blogPda,
-                user: wallet.publicKey, 
-                systemProgram: web3.SystemProgram.programId 
+                user: wallet.publicKey,
+                systemProgram: web3.SystemProgram.programId
               })
               .rpc();
             console.log('Blog account initialized!');
@@ -91,7 +93,7 @@ function App() {
         }
       }
     } catch (error) {
-      console.error("Error fetching blog account:", error); 
+      console.error("Error fetching blog account:", error);
       // Add better error handling here 
     }
   };
@@ -100,7 +102,7 @@ function App() {
     if (wallet) {
       getBlogAccount();
     }
-  }, [wallet]); 
+  }, [wallet]);
 
   const createPost = async ({ title, content }) => {
 
@@ -108,7 +110,7 @@ function App() {
     const program = new Program(idl, programID, provider);
     try {
       const [blogPda] = await web3.PublicKey.findProgramAddress(
-        [encodeBuffer("simple_blog")], 
+        [encodeBuffer("simple_blog")],
         program.programId
       );
       await program.methods
@@ -131,22 +133,22 @@ function App() {
         [encodeBuffer("simple_blog")],
         program.programId
       );
- 
+
       await program.methods
         .createComment(postIndex, content)
         .accounts({
-          blogAccount: blogPda, 
+          blogAccount: blogPda,
         })
         .rpc();
- 
+
       // Refresh the post list to show the new comment
-      await getBlogAccount(); 
+      await getBlogAccount();
     } catch (error) {
       console.error("Error creating comment:", error);
       // Handle error, e.g., display an error message
     }
   };
- 
+
   // Example for editPost function
   const editPost = async (postIndex, newTitle, newContent) => {
     const provider = await getProvider();
@@ -156,20 +158,20 @@ function App() {
         [encodeBuffer("simple_blog")],
         program.programId
       );
- 
+
       await program.methods
         .editPost(postIndex, newTitle, newContent)
         .accounts({
           blogAccount: blogPda,
         })
         .rpc();
- 
+
       await getBlogAccount(); // Refresh the post list
     } catch (error) {
       console.error("Error editing post:", error);
     }
   };
- 
+
   // Example for deletePost function
   const deletePost = async (postIndex) => {
     const provider = await getProvider();
@@ -179,20 +181,20 @@ function App() {
         [encodeBuffer("simple_blog")],
         program.programId
       );
- 
+
       await program.methods
         .deletePost(postIndex)
         .accounts({
           blogAccount: blogPda,
         })
         .rpc();
- 
+
       await getBlogAccount();
     } catch (error) {
       console.error("Error deleting post:", error);
     }
   };
- 
+
   // Example for deleteComment function
   const deleteComment = async (postIndex, commentIndex) => {
     const provider = await getProvider();
@@ -202,14 +204,14 @@ function App() {
         [encodeBuffer("simple_blog")],
         program.programId
       );
- 
+
       await program.methods
         .deleteComment(postIndex, commentIndex)
         .accounts({
           blogAccount: blogPda,
         })
         .rpc();
- 
+
       await getBlogAccount();
     } catch (error) {
       console.error("Error deleting comment:", error);
@@ -221,7 +223,7 @@ function App() {
     setEditingPostIndex(postIndex);
     setEditTitle(posts[postIndex].title);
     setEditContent(posts[postIndex].content);
-    setEditDialogOpen(true); 
+    setEditDialogOpen(true);
   };
 
   const handleEditDialogClose = () => {
@@ -242,20 +244,33 @@ function App() {
     }
   };
 
+  const filteredPosts = posts.filter(post => {
+    const titleMatch = post.title.toLowerCase().includes(searchTerm.toLowerCase());
+    return titleMatch;
+  });
+
   return (
     <div className="App">
-      <h1>My Solana Blog</h1>
+      <h1>BlogChain - Reshaping Digital Storytelling</h1>
       {!wallet && (
         <button onClick={connectWallet}>Connect Wallet</button>
       )}
 
-      {wallet && ( 
-        <> 
-          <BlogForm onSubmit={createPost} type="post" /> 
+      {wallet && (
+        <div className="container">
+          <TextField
+            label="Search by Title"
+            variant="outlined"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ marginBottom: '1rem' }}
+          />
 
-          {posts.map((post, index) => (
-            <div key={index}>
-              <BlogPost post={post} /> 
+          <BlogForm onSubmit={createPost} type="post" />
+
+          {filteredPosts.map((post, index) => (
+            <div key={index} className="blog-post">
+              <BlogPost post={post} />
 
               {/* Edit Post Button */}
               <Button
@@ -277,32 +292,33 @@ function App() {
               </Button>
 
               {/* Comment Section */}
-              <BlogForm 
-                onSubmit={(content) => createComment(index, content.content)} 
-                type="comment" 
+              <div className="comment-section">
+                {post.comments.map((comment, commentIndex) => (
+                  <div key={commentIndex}>
+                    <Comment content={comment.content} />
+
+                    {/* Delete Comment Button */}
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      color="error"
+                      onClick={() => deleteComment(index, commentIndex)}
+                      style={{ marginLeft: '1rem' }}
+                    >
+                      Delete Comment
+                    </Button>
+                  </div>
+                ))}
+              </div>
+              <BlogForm
+                onSubmit={(content) => createComment(index, content.content)}
+                type="comment"
               />
-
-              {post.comments.map((comment, commentIndex) => (
-                <div key={commentIndex} style={{ marginLeft: '2rem' }}> 
-                  <Comment content={comment.content} />
-
-                  {/* Delete Comment Button */}
-                  <Button 
-                    variant="outlined"
-                    size="small"
-                    color="error"
-                    onClick={() => deleteComment(index, commentIndex)}
-                    style={{ marginLeft: '1rem' }}
-                  >
-                    Delete Comment
-                  </Button>
-                </div>
-              ))}
             </div>
           ))}
 
           {/* Dialog for Editing a Post */}
-          <Dialog open={editDialogOpen} onClose={handleEditDialogClose}>
+          <Dialog open={editDialogOpen} onClose={handleEditDialogClose} className="edit-dialog">
             <DialogTitle>Edit Post</DialogTitle>
             <DialogContent>
               <DialogContentText>
@@ -313,7 +329,6 @@ function App() {
                 margin="dense"
                 label="Title"
                 type="text"
-                fullWidth
                 value={editTitle}
                 onChange={(e) => setEditTitle(e.target.value)}
               />
@@ -321,7 +336,6 @@ function App() {
                 margin="dense"
                 label="Content"
                 type="text"
-                fullWidth
                 multiline
                 rows={4}
                 value={editContent}
@@ -336,8 +350,8 @@ function App() {
                 Save Changes
               </Button>
             </DialogActions>
-          </Dialog> 
-        </>
+          </Dialog>
+        </div>
       )}
     </div>
   );
