@@ -29,8 +29,8 @@ Before running the app, ensure that you have the following tools installed:
 1. Clone this repository to your local machine:
 
    ```bash
-   git clone https://github.com/yourusername/blockchain-post-interaction-app.git
-   cd blockchain-post-interaction-app
+   git clone https://github.com/Nazken04/fintech_portfolio.git
+   cd dapp_blog
    ```
 
 2. Install the required dependencies:
